@@ -1,0 +1,13 @@
+package com.example.arbolito;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
+public interface arbolitoAPI {
+    @GET("api/v1/persona/{idpersona}")
+    public Call<persona> find(@Path("idpersona") int idpersona);
+
+    @GET("api/v1/persona/ci/{cipersona}")
+    public Call<persona> buscarCi(@Path("cipersona") String cipersona);
+}
