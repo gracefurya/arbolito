@@ -2,6 +2,7 @@ package com.example.arbolito;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -53,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void irARegistrar(View view){
+        Intent intent=new Intent(MainActivity.this,PantallaRegistrar.class);
+        startActivity(intent);
     }
 }
 

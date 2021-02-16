@@ -1,7 +1,9 @@
 package com.example.arbolito;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface arbolitoAPI {
@@ -10,4 +12,7 @@ public interface arbolitoAPI {
 
     @GET("api/v1/persona/ci/{cipersona}")
     public Call<persona> buscarCi(@Path("cipersona") String cipersona);
+
+    @POST("api/v1/persona")
+    public Call<Void> registrarPersona(@Body persona p);
 }
