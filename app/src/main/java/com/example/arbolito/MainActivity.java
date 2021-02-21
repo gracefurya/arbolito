@@ -45,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
                     persona p = response.body().getData();
 
                     System.out.println("nombre: " + p.getNombre());
+                    Intent intent=new Intent(MainActivity.this,pantallaMenuUsuario.class);
+                    intent.putExtra("nombreU",p.getNombre());
+                    intent.putExtra("paternoU",p.getPaterno());
+                    intent.putExtra("maternoU",p.getMaterno());
+                    intent.putExtra("ci",p.getCarnetidentidad());
+                    intent.putExtra("telefono",p.getTelefono());
+                    intent.putExtra("celular",p.getCelular());
+                    startActivity(intent);
                 }
             }
 

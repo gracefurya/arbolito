@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Arbolito"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PantallaRegistrar"></activity>
+        <activity android:name=".pantallaMenuUsuario"></activity>
+        <activity android:name=".PantallaRegistrar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
