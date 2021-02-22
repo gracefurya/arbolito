@@ -2,7 +2,9 @@ package com.example.arbolito;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -41,6 +43,11 @@ public class pantallaMenuUsuario extends AppCompatActivity {
         pantCi.setText("Ci: "+p.getCarnetidentidad());
         pantCelular.setText("Celular: "+p.getCelular());
         pantTelefono.setText("Telefono: "+p.getTelefono());
+    }
+
+    public void irAPantallaRegistrar(View view){
+        Intent intent=new Intent(pantallaMenuUsuario.this,AgregarArbol.class);
+        startActivity(intent);
     }
 
 }

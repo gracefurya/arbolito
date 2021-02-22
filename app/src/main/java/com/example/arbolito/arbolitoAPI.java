@@ -15,4 +15,10 @@ public interface arbolitoAPI {
 
     @POST("api/v1/persona")
     public Call<Void> registrarPersona(@Body persona p);
+
+    @GET("api/v1/distrito")
+    public Call<ResponseDistrito> obtenerDistritos();
+
+    @GET("/api/v1/zonaverde/distrito/{iddistrito}")
+    public Call<ResponseZonaVerde> obtenerZonasVerdesByIDDistrito(@Path("iddistrito") int iddistrito);
 }
