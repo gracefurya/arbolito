@@ -47,4 +47,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textView11"
         />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinner2"
+        android:layout_marginTop="30dp"
+        android:maxHeight="150dp"
+        android:maxWidth="150dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@android:drawable/ic_menu_crop" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:onClick="agregarArbolitoImagen"
+        android:text="Subir imagen" />
 </RelativeLayout>
