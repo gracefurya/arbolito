@@ -32,6 +32,6 @@ public interface arbolitoAPI {
     @Multipart
     @POST("/api/v1/arbolito")
     public Call<ResponseBody> updateProfile(
-                                           @Part MultipartBody.Part image);
+                                           @Part MultipartBody.Part file,@Part("file") RequestBody name);
 
 }

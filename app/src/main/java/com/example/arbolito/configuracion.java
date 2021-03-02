@@ -1,7 +1,7 @@
 package com.example.arbolito;
 
 public class configuracion {
-    public String urlServidor="http://192.168.42.251:8080/";
+    public String urlServidor="http://158.124.30.108:3000/";
 
     public configuracion(){}
 

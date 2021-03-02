@@ -1,10 +1,15 @@
 package com.example.arbolito;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
@@ -146,21 +151,71 @@ public class AgregarArbol extends AppCompatActivity {
     }
 
     public void agregarArbolitoImagen(View view){
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/");
-        startActivityForResult(intent.createChooser(intent,"Seleccione una Imagen"),10);
+
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent,"seleccione una imagen"),10);
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_OK){
-            Uri path=data.getData();
-            System.out.println("direccion: "+path.getPath());
-            image.setImageURI(path);
-            subirImagen(path);
+        switch (requestCode) {
+            case 10:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = data.getData();
+                    String path =uri.getPath();
+                    System.out.println("diirrrrrrrÑ " + path);
+                }
+                break;
         }
+    }*/
+
+
+     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+         super.onActivityResult(requestCode, resultCode, data);
+         if (resultCode == RESULT_OK) {
+             Uri path = data.getData();
+             System.out.println("direccion: " + path.getPath());
+             image.setImageURI(path);
+             subirImagen(path);
+         }
+     }
+
+    public String getAbsolutePath(Uri uri) {
+        if (Build.VERSION.SDK_INT >= 19) {
+            String id = "";
+            if (uri.getLastPathSegment().split(":").length > 1)
+                id = uri.getLastPathSegment().split(":")[1];
+            else if (uri.getLastPathSegment().split(":").length > 0)
+                id = uri.getLastPathSegment().split(":")[0];
+            if (id.length() > 0) {
+                final String[] imageColumns = {MediaStore.Images.Media.DATA, MediaStore.Images.Media.ORIENTATION};
+                Uri tempUri = uri;
+                Cursor imageCursor = getContentResolver().query(tempUri, imageColumns, MediaStore.Images.Media._ID + "=" + id, null, null);
+                if (imageCursor.moveToFirst()) {
+                    return imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.ORIENTATION};
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } else
+                return null;
+        }
+
     }
 
     public void subirImagen(Uri path){
@@ -170,21 +225,22 @@ public class AgregarArbol extends AppCompatActivity {
                 .build();
         arbolitoAPI aa=retrofit.create(arbolitoAPI.class);
 
-        File file = new File("external/images/media/Phalaenopsis_JPEG.png");
-        System.out.println(file.getName());
+        System.out.println(getAbsolutePath(path));
+        File file = new File(getAbsolutePath(path));
+        System.out.println(":::: "+file.exists());
         RequestBody requestFile =
-                RequestBody.create( MediaType.parse(getContentResolver().getType(path)),
+                RequestBody.create( MediaType.parse("image/*"),
                         file);
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
         String descriptionString = "hello, this is description speaking";
         RequestBody description =RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
-        Call<ResponseBody> call=aa.updateProfile(body);
+        Call<ResponseBody> call=aa.updateProfile(body,requestFile);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                System.out.println("Se envio correctamente");
             }
 
             @Override
