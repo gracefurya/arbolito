@@ -42,7 +42,7 @@ public class PantallaVerArbol extends AppCompatActivity {
         for(int i=0;i<arboles.length;i++){
             ImageView iv=new ImageView(this);
             Picasso.get()
-                    .load("http://158.124.30.108:3000/recursos/"+arboles[i].getIdarbol()+".jpg")
+                    .load(URLApi+"/recursos/"+arboles[i].getIdarbol()+".jpg")
                     .into(iv);
             la.addView(iv);
             TextView nombreT=new TextView(this);
