@@ -32,6 +32,9 @@ public interface arbolitoAPI {
     @Multipart
     @POST("/api/v1/arbolito")
     public Call<ResponseBody> updateProfile(
-                                           @Part MultipartBody.Part file,@Part("file") RequestBody name);
+                                           @Part MultipartBody.Part file,@Part("file") RequestBody name,@Part("arbol") Arbol arbol);
+
+    @GET("api/v1/persona/arboles/{idpersona}")
+    public Call<ResponseArbol> obtenerArbolesByPersonaId(@Path("idpersona")int idpersona);
 
 }

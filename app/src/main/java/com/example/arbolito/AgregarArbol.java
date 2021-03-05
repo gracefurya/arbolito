@@ -11,12 +11,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -43,8 +46,12 @@ public class AgregarArbol extends AppCompatActivity {
     private Distrito distritoSeleccionado;
     private ZonaVerde[] zonasverdes;
     private ZonaVerde zonaverdeSeleccionada;
+    private EditText pantallaTexto;
+    private EditText pantallaTipo;
+    private int idPersona;
 
     private ImageView image;
+    private Uri uriImagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +59,13 @@ public class AgregarArbol extends AppCompatActivity {
         setContentView(R.layout.activity_agregar_arbol);
         spinnerDistritos=findViewById(R.id.spinner);
         spinnerZonasVerdes=findViewById(R.id.spinner2);
+        pantallaTexto=findViewById(R.id.editTextTextPersonName);
+        pantallaTipo=findViewById(R.id.editTextTextPersonName2);
+        idPersona=getIntent().getIntExtra("idpersona",0);
         image=findViewById(R.id.imageView);
         LlenarDistrito();
+        System.out.println(idPersona);
+
     }
 
     public void LlenarDistrito(){
@@ -181,8 +193,9 @@ public class AgregarArbol extends AppCompatActivity {
          if (resultCode == RESULT_OK) {
              Uri path = data.getData();
              System.out.println("direccion: " + path.getPath());
+             uriImagen=path;
              image.setImageURI(path);
-             subirImagen(path);
+             //subirImagen(path);
          }
      }
 
@@ -218,7 +231,7 @@ public class AgregarArbol extends AppCompatActivity {
 
     }
 
-    public void subirImagen(Uri path){
+    public void subirImagen(Uri path,Arbol arbol){
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl(URLApi)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -236,19 +249,46 @@ public class AgregarArbol extends AppCompatActivity {
         String descriptionString = "hello, this is description speaking";
         RequestBody description =RequestBody.create(
                         okhttp3.MultipartBody.FORM, descriptionString);
-        Call<ResponseBody> call=aa.updateProfile(body,requestFile);
+        Call<ResponseBody> call=aa.updateProfile(body,requestFile,arbol);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 System.out.println("Se envio correctamente");
+                mostrarTexto("Se guardo correctamente");
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                mostrarTexto("Error al conectar con el servidor");
                 System.out.println("naaa");
             }
         });
 
+    }
+
+    public void subirArbol(Arbol arbol){
+
+    }
+
+    public void obtenerDatosYsubir(View view){
+         try {
+             String nombre = pantallaTexto.getText().toString();
+             String tipo = pantallaTipo.getText().toString();
+             Arbol arbol = new Arbol();
+             arbol.setIdpersona(idPersona);
+             arbol.setNombre(nombre);
+             arbol.setIdzonaverde(zonasverdes[spinnerZonasVerdes.getSelectedItemPosition()].getIdzonaverde());
+             arbol.setTipo(tipo);
+             subirImagen(uriImagen, arbol);
+         }catch (Exception e){
+             System.out.println("Error :: "+e);
+         }
+    }
+
+    public void mostrarTexto(String m){
+         Toast mensaje= Toast.makeText(getApplicationContext(),"m",Toast.LENGTH_LONG);
+         mensaje.setGravity(Gravity.CENTER,0,0);
+         mensaje.show();
     }
 
 }

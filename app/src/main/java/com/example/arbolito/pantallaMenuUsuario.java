@@ -35,6 +35,7 @@ public class pantallaMenuUsuario extends AppCompatActivity {
         p.setCarnetidentidad(getIntent().getStringExtra("ci"));
         p.setTelefono(getIntent().getStringExtra("telefono"));
         p.setCelular(getIntent().getStringExtra("celular"));
+        p.setIdpersona(getIntent().getIntExtra("idpersona",0));
         mostrarDatos();
     }
 
@@ -47,6 +48,13 @@ public class pantallaMenuUsuario extends AppCompatActivity {
 
     public void irAPantallaRegistrar(View view){
         Intent intent=new Intent(pantallaMenuUsuario.this,AgregarArbol.class);
+        intent.putExtra("idpersona",p.getIdpersona());
+        startActivity(intent);
+    }
+
+    public void irAVerArbol(View view){
+        Intent intent=new Intent(pantallaMenuUsuario.this,PantallaVerArbol.class);
+        intent.putExtra("idpersona",p.getIdpersona());
         startActivity(intent);
     }
 

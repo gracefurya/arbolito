@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("ci",p.getCarnetidentidad());
                     intent.putExtra("telefono",p.getTelefono());
                     intent.putExtra("celular",p.getCelular());
+                    intent.putExtra("idpersona",p.getIdpersona());
                     startActivity(intent);
                 }
             }
