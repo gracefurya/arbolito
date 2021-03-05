@@ -1,11 +1,16 @@
 package com.example.arbolito;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,11 +23,29 @@ public class MainActivity extends AppCompatActivity {
     public EditText carnetIdentidad;
     public String urlAPI=new configuracion().urlServidor;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        pedirPermiso();
         carnetIdentidad=findViewById(R.id.LoginUserCi);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void pedirPermiso(){
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+            System.out.println("Todo bien con los permisos");
+        }else{
+            if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                mostrarMensaje("Se necesita permiso para subir imagenes");
+            }
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},MODE_WORLD_READABLE);
+        }
+    }
+
+    public void mostrarMensaje(String mensaje){
+        Toast.makeText(this,mensaje, Toast.LENGTH_LONG).show();
     }
 
     public void obtenerDatosCi(View view){
