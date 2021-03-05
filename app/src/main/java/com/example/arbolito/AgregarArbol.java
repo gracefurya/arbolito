@@ -286,7 +286,7 @@ public class AgregarArbol extends AppCompatActivity {
     }
 
     public void mostrarTexto(String m){
-         Toast mensaje= Toast.makeText(getApplicationContext(),"m",Toast.LENGTH_LONG);
+         Toast mensaje= Toast.makeText(getApplicationContext(),m,Toast.LENGTH_LONG);
          mensaje.setGravity(Gravity.CENTER,0,0);
          mensaje.show();
     }

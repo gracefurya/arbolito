@@ -83,7 +83,7 @@
         android:layout_below="@id/editTextTextPersonName"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="TextView" />
+        android:text="Agregar Tipo" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
