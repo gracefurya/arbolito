@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -170,20 +173,8 @@ public class AgregarArbol extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent,"seleccione una imagen"),10);
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 10:
-                if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    String path =uri.getPath();
-                    System.out.println("diirrrrrrrÑ " + path);
-                }
-                break;
-        }
-    }*/
+
 
 
      @Override
@@ -192,15 +183,19 @@ public class AgregarArbol extends AppCompatActivity {
          super.onActivityResult(requestCode, resultCode, data);
          if (resultCode == RESULT_OK) {
              Uri path = data.getData();
-             System.out.println("direccion: " + path.getPath());
+             //System.out.println("direccion: " + getImageFilePath(path)+" \n"+path.getEncodedPath()+"\n"+Build.VERSION.SDK_INT);
              uriImagen=path;
+
              image.setImageURI(path);
              //subirImagen(path);
          }
      }
 
+
+
     public String getAbsolutePath(Uri uri) {
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT<29) {
+            System.out.println("opcion1");
             String id = "";
             if (uri.getLastPathSegment().split(":").length > 1)
                 id = uri.getLastPathSegment().split(":")[1];
@@ -218,7 +213,10 @@ public class AgregarArbol extends AppCompatActivity {
             } else {
                 return null;
             }
-        } else {
+        }else if(Build.VERSION.SDK_INT>=29){
+            return getImageFilePath(uri);
+        }
+        else {
             String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.ORIENTATION};
             Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
             if (cursor != null) {
@@ -229,6 +227,26 @@ public class AgregarArbol extends AppCompatActivity {
                 return null;
         }
 
+    }
+
+    public String getImageFilePath(Uri uri) {
+        String path = null, image_id = null;
+
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            image_id = cursor.getString(0);
+            image_id = image_id.substring(image_id.lastIndexOf(":") + 1);
+            cursor.close();
+        }
+
+        Cursor cursores = getContentResolver().query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Images.Media._ID + " = ? ", new String[]{image_id}, null);
+        if (cursores!=null) {
+            cursores.moveToFirst();
+            path = cursores.getString(cursores.getColumnIndex(MediaStore.Images.Media.DATA));
+            cursores.close();
+        }
+        return path;
     }
 
     public void subirImagen(Uri path,Arbol arbol){
