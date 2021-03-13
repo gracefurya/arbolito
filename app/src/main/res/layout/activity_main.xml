@@ -14,7 +14,8 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:text="Ingrese su CI"
+        android:text=""
+        android:hint="Ingrese su CI"
         android:textSize="24sp" />
 
     <Button
